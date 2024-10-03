@@ -1,0 +1,8 @@
+*
+!nest-cli.json
+!src/
+!package-lock.json
+!package.json
+!tsconfig.build.json
+!tsconfig.json
+!entrypoint.sh
