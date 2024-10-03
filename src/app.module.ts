@@ -9,6 +9,12 @@ import { FilesController } from './files/files.controller';
 import { HealthController } from './health/health.controller';
 import { PostgresTtlService } from './ttl/postgres_ttl.service';
 
+import { TerminusModule } from '@nestjs/terminus';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { dataSourceOptions } from './data-source';
+import { AuthModule } from './auth/auth.module';
+import { UserModule } from './user/user.module';
+
 dotenv.config();
 const logger = new Logger('AppModule');
 
@@ -29,7 +35,13 @@ const addTtlProvider = () => {
 };
 
 @Module({
-  imports: [ScheduleModule.forRoot()],
+  imports: [
+    ScheduleModule.forRoot(),
+    TypeOrmModule.forRoot({ ...dataSourceOptions, autoLoadEntities: true }),
+    TerminusModule,
+    UserModule,
+    AuthModule,
+  ],
   controllers: [
     ScenesController,
     RoomsController,
@@ -40,6 +52,6 @@ const addTtlProvider = () => {
 })
 export class AppModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(RawParserMiddleware).forRoutes('**');
+    consumer.apply(RawParserMiddleware).forRoutes(ScenesController, RoomsController, FilesController);
   }
 }
