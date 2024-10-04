@@ -5,6 +5,7 @@ import { type SeederOptions } from 'typeorm-extension';
 import { CreateUser1557166726050 } from './migrations/1557166726050-CreateUser';
 import { CreateProfile1570141220019 } from './migrations/1570141220019-CreateProfile';
 import { CreateSessionStorage1584985637890 } from './migrations/1584985637890-CreateSessionStorage';
+import { ModifyUser1597166726050 } from './migrations/1597166726050-ModifyUser';
 import { Profile } from './user/entities/profile.entity';
 import { User } from './user/entities/user.entity';
 import { profileFactory } from './user/factories/profile.factory';
@@ -22,6 +23,7 @@ export const dataSourceOptions: DataSourceOptions & SeederOptions = {
     CreateUser1557166726050,
     CreateProfile1570141220019,
     CreateSessionStorage1584985637890,
+    ModifyUser1597166726050,
   ],
   synchronize: false,
   extra: {

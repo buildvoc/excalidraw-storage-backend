@@ -31,6 +31,9 @@ export class User {
   @UpdateDateColumn()
   updatedAt: Date;
 
+  @Column({ nullable: true, type: 'timestamp' })
+  emailVerifiedAt: Date;
+
   constructor(data: Partial<User> = {}) {
     Object.assign(this, data);
   }
