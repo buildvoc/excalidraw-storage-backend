@@ -6,6 +6,7 @@ import * as passport from 'passport';
 import * as connectPgSimple from 'connect-pg-simple';
 
 import { AppModule } from './app.module';
+import { HttpErrorExceptionsFilter } from './http-error-exception.filter';
 
 export function setup(app: INestApplication): INestApplication {
   app.setGlobalPrefix(process.env.GLOBAL_PREFIX ?? '/api/v2');
@@ -16,6 +17,7 @@ export function setup(app: INestApplication): INestApplication {
       errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY,
     }),
   );
+  app.useGlobalFilters(new HttpErrorExceptionsFilter());
 
   app.use(cookieParser(process.env.APP_SECRET));
 

@@ -6,6 +6,9 @@ import {
   HttpCode,
   HttpStatus,
   Post,
+  Query,
+  Request,
+  Res,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
@@ -28,8 +31,12 @@ export class AuthController {
   @Post('register')
   @HttpCode(HttpStatus.CREATED)
   @UseInterceptors(TokenInterceptor)
-  async register(@Body() signUpDto: SignUpDto): Promise<User> {
-    return await this.authService.register(signUpDto);
+  async register(@Request() req, @Body() signUpDto: SignUpDto): Promise<any> {
+    await this.authService.register(req, signUpDto);
+
+    return {
+      message: 'Register success. Please check email to verify your account.',
+    };
   }
 
   @Post('login')
@@ -42,6 +49,26 @@ export class AuthController {
     );
 
     return data;
+  }
+
+  @Get('verify-email?')
+  async verifyEmail(@Query('token') token: string, @Res() res) {
+    await this.authService.verifyEmail(token);
+    return res.redirect(process.env.ALLOWED_ORIGINS);
+  }
+
+  @Post('resend-email-verification')
+  @UseGuards(SessionAuthGuard, JWTAuthGuard)
+  @HttpCode(HttpStatus.OK)
+  async resendEmailVerification(@Request() req, @AuthUser() user: User) {
+
+    try {
+      await this.authService.sendEmailVerificationLink(req, user);
+    } catch (error) {}
+
+    return {
+      message: 'Email verification link sent. Please check your email.',
+    };
   }
 
   @Get('/me')

@@ -14,13 +14,17 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { dataSourceOptions } from './data-source';
 import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
+import { AppService } from './app.service';
+import { AppController } from './app.controller';
+import { MailerModule } from '@nestjs-modules/mailer';
+import { EjsAdapter } from '@nestjs-modules/mailer/dist/adapters/ejs.adapter';
 
 dotenv.config();
 const logger = new Logger('AppModule');
 
 const buildProviders = () => {
   const ttlProvider = addTtlProvider();
-  const providers: any[] = [StorageService];
+  const providers: any[] = [StorageService, AppService];
   if (ttlProvider) {
     providers.push(ttlProvider);
   }
@@ -39,6 +43,30 @@ const addTtlProvider = () => {
     ScheduleModule.forRoot(),
     TypeOrmModule.forRoot({ ...dataSourceOptions, autoLoadEntities: true }),
     TerminusModule,
+    MailerModule.forRoot({
+      transport: {
+        host: String(process.env.MAIL_HOST),
+        port: Number(process.env.MAIL_PORT),
+        secure: true,
+        auth: {
+          user: process.env.MAIL_USER,
+          pass: process.env.MAIL_PASS,
+        },
+        tls: {
+          rejectUnauthorized: false,
+        },
+      },
+      defaults: {
+        from: `${process.env.MAIL_FROM_NAME} <${process.env.MAIL_USER}>`,
+      },
+      template: {
+        dir: __dirname + '/templates',
+        adapter: new EjsAdapter({ inlineCssEnabled: true }),
+        options: {
+          strict: false,
+        },
+      },
+    }),
     UserModule,
     AuthModule,
   ],
@@ -47,6 +75,7 @@ const addTtlProvider = () => {
     RoomsController,
     FilesController,
     HealthController,
+    AppController,
   ],
   providers: buildProviders(),
 })

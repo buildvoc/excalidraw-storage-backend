@@ -41,4 +41,17 @@ export class UserService {
 
     return this.userRepository.save(user);
   }
+
+  async verifyEmail(id: number): Promise<User> {
+    const user = await this.userRepository.findOneBy({ id });
+
+    if (!user) {
+      throw new NotFoundException(`There isn't any user with id: ${id}`);
+    }
+
+    this.userRepository.merge(user, {emailVerifiedAt: Date.now()});
+
+    return this.userRepository.save(user);
+  }
+
 }
