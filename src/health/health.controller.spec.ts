@@ -26,6 +26,6 @@ describe('HealthController', () => {
         return resolve(true);
       });
     });
-    expect(await controller.health()).toBe('healthy');
+    expect(await controller.checkStorage()).toBe('healthy');
   });
 });

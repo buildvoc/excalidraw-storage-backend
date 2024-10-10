@@ -39,6 +39,7 @@ describe('Auth Controller', () => {
       name: 'John Doe',
       email: 'john@doe.me',
       password: 'Pa$$w0rd',
+      password_confirmation: 'Pa$$w0rd',
     };
 
     mockedAuthService.register.mockResolvedValue(
@@ -48,7 +49,7 @@ describe('Auth Controller', () => {
       }) as User,
     );
 
-    await expect(controller.register(register)).resolves.toBeDefined();
+    await expect(controller.register(null, register)).resolves.toBeDefined();
   });
 
   it('should log in an user', async () => {

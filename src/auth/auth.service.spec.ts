@@ -5,7 +5,7 @@ import { createMock } from 'ts-auto-mock';
 import { User } from '../user/entities/user.entity';
 import { UserService } from '../user/services/user.service';
 import { AuthService } from './auth.service';
-import type { SignUp } from './dto/sign-up.dto';
+import type { SignUpDto } from './dto/sign-up.dto';
 import type { JwtPayload } from './interfaces/jwt-payload.interface';
 
 describe('AuthService', () => {
@@ -41,14 +41,15 @@ describe('AuthService', () => {
   });
 
   it('should register a new user', async () => {
-    const signUp: SignUp = {
+    const signUp: SignUpDto = {
       name: 'John Doe',
       email: 'john@doe.me',
       password: 'Pa$$w0rd',
+      password_confirmation: 'Pa$$w0rd',
     };
 
     mockedUserService.create.mockResolvedValueOnce(createMock<User>(signUp));
-    const user = await service.register(signUp);
+    const user = await service.register(null, signUp);
 
     expect(user).toHaveProperty('email', signUp.email);
     expect(user).toHaveProperty('name', signUp.name);

@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException, Request, BadRequestException } from '@nestjs/common';
+import { Injectable, UnauthorizedException, Request, BadRequestException, Logger } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 
 import { User } from '../user/entities/user.entity';
@@ -6,6 +6,8 @@ import { SignUpDto } from './dto/sign-up.dto';
 import { JwtPayload } from './interfaces/jwt-payload.interface';
 import { UserService } from '../user/services/user.service';
 import { MailerService } from '@nestjs-modules/mailer';
+
+const logger = new Logger("AuthService");
 
 @Injectable()
 export class AuthService {
@@ -21,7 +23,9 @@ export class AuthService {
 
     try {
       await this.sendEmailVerificationLink(req, user);
-    } catch (error) {}
+    } catch (error) {
+      logger.error('Send mail verification failed:', error);
+    }
 
     return user;
   }
