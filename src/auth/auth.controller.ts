@@ -54,7 +54,7 @@ export class AuthController {
   @Get('verify-email?')
   async verifyEmail(@Query('token') token: string, @Res() res) {
     await this.authService.verifyEmail(token);
-    return res.redirect(process.env.ALLOWED_ORIGINS + '?verified=1');
+    return res.redirect(process.env.ALLOWED_ORIGINS + '/login?verified=1');
   }
 
   @Post('resend-email-verification')
