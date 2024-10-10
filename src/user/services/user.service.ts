@@ -49,7 +49,7 @@ export class UserService {
       throw new NotFoundException(`There isn't any user with id: ${id}`);
     }
 
-    this.userRepository.merge(user, {emailVerifiedAt: Date.now()});
+    this.userRepository.merge(user, {emailVerifiedAt: new Date()});
 
     return this.userRepository.save(user);
   }
