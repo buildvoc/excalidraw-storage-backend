@@ -12,6 +12,10 @@ import { profileFactory } from './user/factories/profile.factory';
 import { userFactory } from './user/factories/user.factory';
 import { ProfileSeeder } from './user/seeders/profile.seeder';
 import { UserSeeder } from './user/seeders/user.seeder';
+import { CreateProject1728548094000 } from './migrations/1728548094000-CreateProject';
+import { projectFactory } from './project/factories/project.factory';
+import { ProjectSeeder } from './project/seeders/project.seeder';
+import { CreateDraw1728548094000 } from './migrations/1728548094001-CreateDraw';
 
 dotenv.config();
 
@@ -24,6 +28,8 @@ export const dataSourceOptions: DataSourceOptions & SeederOptions = {
     CreateProfile1570141220019,
     CreateSessionStorage1584985637890,
     ModifyUser1597166726050,
+    CreateProject1728548094000,
+    CreateDraw1728548094000,
   ],
   synchronize: false,
   extra: {
@@ -34,8 +40,8 @@ export const dataSourceOptions: DataSourceOptions & SeederOptions = {
           }
         : false,
   },
-  factories: [userFactory, profileFactory],
-  seeds: [UserSeeder, ProfileSeeder],
+  factories: [userFactory, profileFactory, projectFactory],
+  seeds: [UserSeeder, ProfileSeeder, ProjectSeeder],
 };
 
 export const appDataSource = new DataSource(dataSourceOptions);

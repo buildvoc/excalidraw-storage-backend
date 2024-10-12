@@ -18,6 +18,8 @@ import { AppService } from './app.service';
 import { AppController } from './app.controller';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { EjsAdapter } from '@nestjs-modules/mailer/dist/adapters/ejs.adapter';
+import { ProjectModule } from './project/project.module';
+import { DrawModule } from './draw/draw.module';
 
 dotenv.config();
 const logger = new Logger('AppModule');
@@ -69,6 +71,8 @@ const addTtlProvider = () => {
     }),
     UserModule,
     AuthModule,
+    ProjectModule,
+    DrawModule,
   ],
   controllers: [
     ScenesController,
