@@ -28,7 +28,7 @@ const buildProviders = () => {
   const ttlProvider = addTtlProvider();
   const providers: any[] = [StorageService, AppService];
   if (ttlProvider) {
-    providers.push(ttlProvider);
+    // providers.push(ttlProvider);
   }
   return providers;
 };
