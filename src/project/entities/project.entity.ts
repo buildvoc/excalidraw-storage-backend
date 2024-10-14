@@ -6,10 +6,13 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   ManyToOne,
+  OneToMany,
+  JoinTable,
 } from 'typeorm';
 import { Exclude } from 'class-transformer';
 
 import { User } from 'src/user/entities/user.entity';
+import { Draw } from 'src/draw/draw.entity';
 
 
 @Entity()
@@ -36,4 +39,9 @@ export class Project {
   @JoinColumn()
   @Exclude()
   user: User | number;
+
+  @OneToMany(() => Draw, (draw) => draw.project, {eager: true,})
+  @JoinTable()
+  draws: Draw[]
+
 }

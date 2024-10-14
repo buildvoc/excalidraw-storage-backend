@@ -40,6 +40,5 @@ export class Draw {
 
   @ManyToOne(() => Project, { nullable: false, onDelete: 'RESTRICT' })
   @JoinColumn()
-  @Exclude()
   project: Project | number;
 }

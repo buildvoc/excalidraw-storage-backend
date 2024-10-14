@@ -26,7 +26,8 @@ export class ProjectService {
     return await this.projectRepository.find({
       where: { user: { id: user.id } },
       order: { createdAt: 'DESC' },
-      loadRelationIds: true,
+      loadRelationIds: {relations: ['user']},
+      relations: ['draws'],
     });
   }
 

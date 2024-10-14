@@ -14,6 +14,8 @@ import {
   Delete,
   Header,
   Res,
+  UnauthorizedException,
+  NotFoundException,
 } from '@nestjs/common';
 import { Response } from 'express';
 
@@ -28,16 +30,21 @@ import { DrawUpdateDto } from './dto/draw-update.dto';
 import { Draw } from './draw.entity';
 import { OwnerInterceptor } from './owner.interceptor';
 import { Readable } from 'stream';
+import { StorageNamespace, StorageService } from 'src/storage/storage.service';
 
 @Controller('draw')
 @UseGuards(SessionAuthGuard, JWTAuthGuard)
-@UseInterceptors(ClassSerializerInterceptor, OwnerInterceptor)
 export class DrawController {
-  constructor(private readonly drawService: DrawService) {}
+  namespace = StorageNamespace.SCENES;
+  constructor(
+    private readonly drawService: DrawService,
+    private storageService: StorageService,
+  ) {}
 
   @Post()
   @HttpCode(HttpStatus.OK)
-  async create(
+  @UseInterceptors(ClassSerializerInterceptor, OwnerInterceptor)
+  async upsert(
     @AuthUser() user: User,
     @Body() drawUpsertDto: DrawUpsertDto,
   ): Promise<Draw> {
@@ -46,23 +53,34 @@ export class DrawController {
 
   @Get()
   @HttpCode(HttpStatus.OK)
+  @UseInterceptors(ClassSerializerInterceptor, OwnerInterceptor)
   async list(@AuthUser() user: User,): Promise<Draw[]> {
     return await this.drawService.list(user);
   }
 
   @Get(':id')
   @Header('content-type', 'application/octet-stream')
-  async get(@Param('id', new ParseIntPipe()) id: number, @Res() res: Response): Promise<void> {
+  @UseInterceptors(ClassSerializerInterceptor)
+  async get(@Param('id', new ParseIntPipe()) id: number, @AuthUser() user: User, @Res() res: Response): Promise<void> {
     const data = await this.drawService.findOne(id);
 
+    if (data.user != user.id) throw new UnauthorizedException(`You're unauthorized to access this resources.`);
+
+    let sceneID = Number(data.value.split(",")[0]);
+
+    const scene = await this.storageService.get(sceneID.toString(), this.namespace);
+
+    if (!scene) throw new NotFoundException();
+
     const stream = new Readable();
-    stream.push(data.value);
+    stream.push(scene);
     stream.push(null);
     stream.pipe(res);
   }
 
   @Put(':id')
   @HttpCode(HttpStatus.OK)
+  @UseInterceptors(ClassSerializerInterceptor, OwnerInterceptor)
   async update(
     @Param('id', new ParseIntPipe()) id: number,
     @Body() updates: DrawUpdateDto,
@@ -72,6 +90,7 @@ export class DrawController {
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
+  @UseInterceptors(ClassSerializerInterceptor, OwnerInterceptor)
   async remove(
     @Param('id', new ParseIntPipe()) id: number,
   ): Promise<Draw> {

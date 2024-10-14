@@ -17,7 +17,7 @@ export class DrawService {
 
     const data = Object.assign(drawUpsertDto, { user });
 
-    await this.drawRepository.upsert(data, {conflictPaths: ['id']});
+    await this.drawRepository.upsert(data, {conflictPaths: ['user', 'project', 'title']});
 
     return data as Draw;
   }

@@ -18,6 +18,8 @@ export class CreateDraw1728548094000 implements MigrationInterface {
           REFERENCES "project"("id") ON DELETE RESTRICT ON UPDATE NO ACTION
         )`,
       );
+
+    await queryRunner.query(`CREATE UNIQUE INDEX "draw_userid_idx" ON "draw" USING btree ("userId", "projectId", title);`);
   }
 
   public async down(queryRunner: QueryRunner): Promise<any> {
