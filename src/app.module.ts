@@ -1,4 +1,3 @@
-import * as dotenv from 'dotenv';
 import { Logger, MiddlewareConsumer, Module } from '@nestjs/common';
 import { ScheduleModule } from '@nestjs/schedule';
 import { RawParserMiddleware } from './raw-parser.middleware';
@@ -21,7 +20,6 @@ import { EjsAdapter } from '@nestjs-modules/mailer/dist/adapters/ejs.adapter';
 import { ProjectModule } from './project/project.module';
 import { DrawModule } from './draw/draw.module';
 
-dotenv.config();
 const logger = new Logger('AppModule');
 
 const buildProviders = () => {

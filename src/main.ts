@@ -1,8 +1,10 @@
+import * as dotenv from 'dotenv';
 import { LogLevel } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { setup } from './setup';
 
+dotenv.config();
 function isLogLevel(value: any): value is LogLevel {
   return value in ['log', 'error', 'warn', 'debug', 'verbose'];
 }
