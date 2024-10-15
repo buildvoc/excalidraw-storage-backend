@@ -16,13 +16,15 @@ import { CreateProject1728548094000 } from './migrations/1728548094000-CreatePro
 import { projectFactory } from './project/factories/project.factory';
 import { ProjectSeeder } from './project/seeders/project.seeder';
 import { CreateDraw1728548094000 } from './migrations/1728548094001-CreateDraw';
+import { Project } from './project/entities/project.entity';
+import { Draw } from './draw/draw.entity';
 
 dotenv.config();
 
 export const dataSourceOptions: DataSourceOptions & SeederOptions = {
   type: 'postgres',
   url: process.env.DATABASE_URL,
-  entities: [User, Profile],
+  entities: [User, Profile, Project, Draw],
   migrations: [
     CreateUser1557166726050,
     CreateProfile1570141220019,
