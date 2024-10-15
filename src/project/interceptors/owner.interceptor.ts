@@ -30,7 +30,7 @@ import { Project } from '../entities/project.entity';
 
           const isOwner = userId === user.id;
   
-          if (!isOwner) {
+          if (userId && !isOwner) {
             throw new UnauthorizedException(`You're unauthorized to access this resources.`);
           }
         }),
