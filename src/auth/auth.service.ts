@@ -47,6 +47,12 @@ export class AuthService {
       );
     }
 
+    if (!user.emailVerifiedAt) {
+      throw new UnauthorizedException(
+        `Email not verified. Please check your email inbox to verify account.`,
+      );
+    }
+
     const access_token = this.signToken(user);
 
     delete user.password;
